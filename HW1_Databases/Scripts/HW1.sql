@@ -76,6 +76,17 @@ INSERT INTO Orders (OrderID, UserID, OrderDate, TotalAmount) VALUES
 (4, 4, '2023-07-15', 1029.98),
 (5, 5, '2023-08-01', 44.98);
 
+INSERT INTO Orders (OrderID, UserID, OrderDate, TotalAmount) VALUES
+(6, 1, '2023-09-01', 79.99),  
+(7, 1, '2023-09-20', 24.99),
+(8, 1, '2023-10-01', 49.99), 
+(9, 2, '2023-09-05', 124.96),
+(10, 2, '2023-10-01', 89.99),
+(11, 3, '2023-09-10', 144.97), 
+(12, 4, '2023-09-15', 154.96),
+(13, 5, '2023-09-20', 919.98);
+
+
 INSERT INTO OrderDetails (OrderDetailID, OrderID, ProductID, Quantity) VALUES
 (1, 1, 1, 1),
 (2, 1, 3, 1),
@@ -88,38 +99,49 @@ INSERT INTO OrderDetails (OrderDetailID, OrderID, ProductID, Quantity) VALUES
 (9, 5, 8, 1),
 (10, 5, 9, 2);
 
+INSERT INTO OrderDetails (OrderDetailID, OrderID, ProductID, Quantity) VALUES
+(11, 6, 5, 1),
+(12, 7, 8, 1),
+(13, 8, 4, 1),
+(14, 9, 4, 1),
+(15, 9, 7, 1), 
+(16, 10, 7, 1),
+(17, 11, 8, 1),
+(18, 11, 9, 1), 
+(19, 12, 3, 1), 
+(20, 12, 10, 1),
+(21, 13, 2, 1); 
+
 -- Complex SELECT 
 WITH OrderSummary AS (
     SELECT 
         o.OrderID,
         u.Username,
-        s.ShopName,
         SUM(p.Price * od.Quantity) AS OrderTotal
     FROM 
         Orders o
     JOIN Users u ON o.UserID = u.UserID
     JOIN OrderDetails od ON o.OrderID = od.OrderID
     JOIN Products p ON od.ProductID = p.ProductID
-    JOIN Shops s ON p.ShopID = s.ShopID
     GROUP BY 
-        o.OrderID, u.Username, s.ShopName
+        o.OrderID, u.Username
 )
 SELECT 
     os.Username,
-    os.ShopName,
     COUNT(os.OrderID) AS OrderCount,
     SUM(os.OrderTotal) AS TotalSpent
 FROM 
     OrderSummary os
 WHERE 
-    os.OrderTotal > 50
+    os.OrderTotal > 10
 GROUP BY 
-    os.Username, os.ShopName
+    os.Username
 HAVING 
     COUNT(os.OrderID) > 0
 ORDER BY 
     TotalSpent DESC;
 
+   
 -- UNION
 SELECT 'High Stock' AS StockStatus, ProductName, Stock
 FROM Products
