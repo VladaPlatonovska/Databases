@@ -1,8 +1,6 @@
--- Create Database
 CREATE DATABASE HomeWork_1;
 USE HomeWork_1;
 
--- Create Tables
 CREATE TABLE Users (
     UserID INT PRIMARY KEY,
     Username VARCHAR(50) NOT NULL,
@@ -112,7 +110,7 @@ INSERT INTO OrderDetails (OrderDetailID, OrderID, ProductID, Quantity) VALUES
 (20, 12, 10, 1),
 (21, 13, 2, 1); 
 
--- Complex SELECT 
+
 WITH OrderSummary AS (
     SELECT 
         o.OrderID,
@@ -134,15 +132,13 @@ FROM
     OrderSummary os
 WHERE 
     os.OrderTotal > 10
-GROUP BY 
+and os.Username
+GROUP BY
     os.Username
-HAVING 
-    COUNT(os.OrderID) > 0
 ORDER BY 
     TotalSpent DESC;
 
-   
--- UNION
+
 SELECT 'High Stock' AS StockStatus, ProductName, Stock
 FROM Products
 WHERE Stock > 50
