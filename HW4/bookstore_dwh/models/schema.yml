@@ -1,0 +1,65 @@
+version: 2
+
+sources:
+  - name: bookstore
+    database: bookstore
+    schema: public
+    tables:
+      - name: Authors
+      - name: Books
+      - name: Sales
+      - name: SaleItems
+      - name: Publishers
+      - name: BookPublishers
+      - name: Employees
+      - name: EmployeeDetails
+
+models:
+  - name: raw_books
+    description: "Raw books data"
+    columns:
+      - name: BookID
+        tests:
+          - unique
+          - not_null
+      - name: Price
+        tests:
+          - not_null
+          - positive_values
+      - name: StockQuantity
+        tests:
+          - not_null
+          - positive_values
+
+  - name: raw_sales
+    description: "Raw sales data"
+    columns:
+      - name: SaleID
+        tests:
+          - unique
+          - not_null
+      - name: SaleDate
+        tests:
+          - not_null
+          - valid_date
+      - name: TotalAmount
+        tests:
+          - not_null
+          - positive_values
+
+  - name: fact_sales
+    description: "Sales fact table"
+    tests:
+      - unique:
+          column_name: "SaleItemID"
+    columns:
+      - name: SaleDate
+        tests:
+          - not_null
+          - valid_date
+      - name: Quantity
+        tests:
+          - positive_values
+      - name: UnitPrice
+        tests:
+          - positive_values
